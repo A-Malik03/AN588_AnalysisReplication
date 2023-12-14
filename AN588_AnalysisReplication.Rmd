@@ -102,7 +102,7 @@ plot1 #Let's take a look at the final actual bigplot
 ```
 </br>Nice! I think I replicated it almost identically. Lets move on to the second, smaller plot.
 
-## Small Bar Plot:
+## Small Bar Plot & Descriptive Statistic:
 We can use the bigplot data frame since the small plot uses the totals, not the individual embryo yield. This is also an opportunity to do an inferential statistic, the standard error of mean. The standard error of means is based on a sample, and is calculated by dividing the sample standard deviation by the square root of the number of observations (AN588 Module 7: Central Tendency and Variance).
 ```{r smallplot data}
 cntrl <- bigplot[bigplot$Treatment == "Vehicle ", "totalembryos"] #Place all totalembryos from the control group into a vector called cntrl
@@ -131,11 +131,18 @@ plot2 <- ggplot(smallplot, aes(x = smallplot[,1], y = Means)) +
    annotate("text", x = 2, y = 600, label = "*") #since there is no way to add the asterisks the way it is shown in the paper, I will just add it as an annotation
  plot2 #Take a look at the small plot
 ```
-</br>To double check that there is significance between the two means we can used the 
+</br>To double check that there is significance between the two means we can used the means and the standard errors to see if they overlap.
+
+
+```{r}
+mean(cort) - sd(cort)/sqrt(10) #The lower bar of cortisol bar, which they did not include in the article figure
+mean(cntrl) + sd(cntrl)/sqrt(10) #The upper bar of the control bar
+```
+</br>Since the bars do not overlap, the researchers concluded that there is a significant difference between the total embryo yield of cortisol-fed zebrafish and the control group zebrafish. However, as mentioned in class, the standard error of mean bars are more difficult and do not provide as much information regarding the data. Constructing confidence intervals would be a better technique to prove significant difference.
 
 Now lets put them together. I found the inset_element() function from the package {patchwork} which can place plots upon plots.
 ```{r combined barplot}
-complots <- plot1 + inset_element(plot2, left = 0.001, bottom = 0.5, right = .5, top = 0.95) #inset the smallplot(plot2) into the bigplot(plot1) at the given side coordinates
+complots <- plot1 + inset_element(plot2, left = 0.001, bottom = 0.5, right = .4, top = 0.95) #inset the smallplot(plot2) into the bigplot(plot1) at the given side coordinates
 complots #And now for the final look, with the actual figure below for comparison
 ```
 <img src="img/Zebrafish_Fig2b.png" width="700px"/>
